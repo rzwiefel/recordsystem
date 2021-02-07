@@ -5,15 +5,9 @@
 (def failed-parsing (atom []))
 
 (def date-format (java.text.SimpleDateFormat. "MM/dd/yyyy"))
-(defn parse-date [s]
-  (.parse date-format s))
+(defn parse-date [s] (.parse date-format s))
 
-(def record-type
-  {:first-name    str
-   :last-name     str
-   :email         str
-   :color         keyword
-   :date-of-birth parse-date})
+
 
 (defn store!
   "Store an item.
@@ -21,33 +15,32 @@
   [person]
   (swap! db #(conj % person)))
 
-(defn store-failed-parsing!
-  [item]
-  (swap! failed-parsing #(conj % item)))
+(defn store-failed-parsing! [item] (swap! failed-parsing #(conj % item)))
 
-(defn- filter-db [queries data]
+(defn- filter-db
+  [queries data]
   (if (empty? queries)
     data
     (recur (rest queries) (filter (first queries) data))))
 
-(defn- compare-by [sorts]
+(defn- compare-by
+  [sorts]
   (fn [x y]
     (loop [sorts sorts]
       (let [[[key-fn dir] & remain] sorts
-            result (if (= :asc dir)
-                     (compare (key-fn x) (key-fn y))
-                     (compare (key-fn y) (key-fn x)))]
-        (if (and (= result 0) (seq remain))
-          (recur remain)
-          result)))))
+            result                  (if (= :asc dir)
+                                      (compare (key-fn x) (key-fn y))
+                                      (compare (key-fn y) (key-fn x)))]
+        (if (and (= result 0) (seq remain)) (recur remain) result)))))
 
-(defn- sorted-by [sorts data]
+(defn- sorted-by
+  [sorts data]
   (if (empty? sorts)
     data
-    (let [sorts (partition 2 sorts)]
-      (sort (compare-by sorts) data))))
+    (let [sorts (partition 2 sorts)] (sort (compare-by sorts) data))))
 
-(defn query [& {:keys [filters sorts]}]
+(defn query
+  [& {:keys [filters sorts]}]
   "Query the database with optional list of :filters and/or :sorts.
   :filters is a list of predicates to apply to the result set. eg:
     [#(= :green (:color %))]
@@ -58,30 +51,32 @@
        (sorted-by sorts)))
 
 
-(def addy {:first-name    "adalicia",
-           :last-name     "zwiefelhofer",
-           :email         "adalicia.zwiefelhofer@gmail.com",
-           :color         :blue,
-           :date-of-birth #inst"2019-01-10T07:00:00.000-00:00"})
-(def ryan {:first-name    "ryan",
-           :last-name     "zwiefelhofer",
-           :email         "ryan.zwiefelhofer@gmail.com",
-           :color         :blue,
-           :date-of-birth #inst"1992-11-23T07:00:00.000-00:00"})
-(def alyssa {:first-name    "alyssa"
-             :last-name     "zwiefelhofer"
-             :email         "agzwiefelhofer@gmail.com"
-             :color         :green
-             :date-of-birth (parse-date "9/17/1993")})
-(def bryan {:first-name    "bryan",
-            :last-name     "clonezwiefs",
-            :email         "ryan.zwiefelhofer@gmail.com",
-            :color         :blue,
-            :date-of-birth #inst"1992-11-23T07:00:00.000-00:00"})
+(def addy
+  {:first-name    "adalicia",
+   :last-name     "zwiefelhofer",
+   :email         "adalicia.zwiefelhofer@gmail.com",
+   :color         :blue,
+   :date-of-birth #inst "2019-01-10T07:00:00.000-00:00"})
+(def ryan
+  {:first-name    "ryan",
+   :last-name     "zwiefelhofer",
+   :email         "ryan.zwiefelhofer@gmail.com",
+   :color         :blue,
+   :date-of-birth #inst "1992-11-23T07:00:00.000-00:00"})
+(def alyssa
+  {:first-name    "alyssa",
+   :last-name     "zwiefelhofer",
+   :email         "agzwiefelhofer@gmail.com",
+   :color         :green,
+   :date-of-birth (parse-date "9/17/1993")})
+(def bryan
+  {:first-name    "bryan",
+   :last-name     "clonezwiefs",
+   :email         "ryan.zwiefelhofer@gmail.com",
+   :color         :blue,
+   :date-of-birth #inst "1992-11-23T07:00:00.000-00:00"})
 
-(defn db-test-fixture [f]
-  (reset! db [])
-  (f))
+(defn db-test-fixture [f] (reset! db []) (f))
 (use-fixtures :each db-test-fixture)
 
 (deftest test-empty-db
@@ -101,10 +96,9 @@
 
 
 
-(comment
-  (map store! [addy ryan alyssa bryan])
-  ((compare-by [[:email :desc]]) ryan addy)
-  (query)
-  (query :filters [#(= :green (:color %))])
-  (query :sorts [:email :desc :last-name :asc])
-  '())
+(comment (map store! [addy ryan alyssa bryan])
+         ((compare-by [[:email :desc]]) ryan addy)
+         (query)
+         (query :filters [#(= :green (:color %))])
+         (query :sorts [:email :desc :last-name :asc])
+         '())
