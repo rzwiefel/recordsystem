@@ -13,6 +13,7 @@
   "Store an item.
   TODO(RCZ) - Do we want to allow a collection to be passed as well?"
   [person]
+  #_(println "data/store! receiving: " person)
   (swap! db #(conj % person)))
 
 (defn store-failed-parsing! [item] (swap! failed-parsing #(conj % item)))

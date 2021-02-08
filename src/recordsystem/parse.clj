@@ -29,6 +29,7 @@
   [data]
   (apply hash-map (flatten (for [[k v] data] [k ((k record-types) v)]))))
 
+; TODO (RCZ) - Failure case? Return failure?
 (defn- parse-infix
   [^Pattern delimiter order]
   (fn [data]
@@ -90,9 +91,9 @@
        0
        "!@$(&%!@*#&!@*&!@%*(#(\naaaaaaaaaaaaaaa"
 
-       parse-pipe
+         parse-pipe
        1
-       "!@#$%^&*()-=\na|a|a@a.a|red|1/1/2000"))
+         "!@#$%^&*()-=\na|a|a@a.a|red|1/1/2000"))
 
 (deftest parsing-works
   (let
