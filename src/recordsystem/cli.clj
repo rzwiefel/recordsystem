@@ -43,16 +43,6 @@
     :ssv (parse/parse-space (:data item))
     :psv (parse/parse-pipe (:data item))))
 
-(defn- convert-dates
-  [data]
-  (for [item data]
-    (apply
-      hash-map
-      (flatten (for [[k v] item]
-                 (if (instance? java.util.Date v)
-                   [k (.format data/date-format v)]
-                   [k v]))))))
-
 (defn -help
   [& args]
   (println "USAGE:")
@@ -66,7 +56,7 @@
       (let [data   (flatten (map parse input-files))
             _      (doseq [item data] (data/store! item))
             sorted (data/query :sorts output)
-            xform  (if disable-date-format identity convert-dates)]
+            xform  (if disable-date-format identity parse/convert-dates)]
         (pprint (xform sorted))
         (xform sorted)))))
 

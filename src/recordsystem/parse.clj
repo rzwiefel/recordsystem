@@ -1,6 +1,5 @@
 (ns recordsystem.parse
-  (:require [recordsystem.data :refer [parse-date]]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [clojure.test :refer [deftest is are use-fixtures]])
   (:import (java.util.regex Pattern)))
 
@@ -10,6 +9,24 @@
 ; LastName, FirstName, Email, FavoriteColor, DateOfBirth
 ; The space-delimited file looks like this:
 ; LastName FirstName Email FavoriteColor DateOfBirth
+
+(def date-format (java.text.SimpleDateFormat. "MM/dd/yyyy"))
+
+(defn parse-date [s] (.parse date-format s))
+
+(defn convert-dates
+  "If data is a sequence"
+  [data]
+  (if (and (coll? data) (not (map? data)) (map? (first data)))
+    (for [item data]
+      (apply
+        hash-map
+        (flatten (for [[k v] item]
+                   (if (instance? java.util.Date v)
+                     [k (.format date-format v)]
+                     [k v])))))
+    data))
+
 
 (defn blank-or
   [func]

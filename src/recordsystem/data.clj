@@ -4,8 +4,7 @@
 (def db (atom []))
 (def failed-parsing (atom []))
 
-(def date-format (java.text.SimpleDateFormat. "MM/dd/yyyy"))
-(defn parse-date [s] (.parse date-format s))
+
 
 
 (defn store!
@@ -68,7 +67,7 @@
    :last-name     "zwiefelhofer",
    :email         "agzwiefelhofer@gmail.com",
    :color         :green,
-   :date-of-birth (parse-date "9/17/1993")})
+   :date-of-birth  #inst"1993-07-19T07:00:00.000-00:00"})
 (def bryan
   {:first-name    "bryan",
    :last-name     "clonezwiefs",
