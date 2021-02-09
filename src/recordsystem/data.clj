@@ -51,27 +51,27 @@
 (def addy
   {:first-name    "adalicia",
    :last-name     "zwiefelhofer",
-   :email         "adalicia.zwiefelhofer@gmail.com",
+   :email         "adalicia.z@gmail.com",
    :color         :blue,
-   :date-of-birth #inst "2019-01-10T07:00:00.000-00:00"})
+   :date-of-birth #inst "2019-11-10T07:00:00.000-00:00"})
 (def ryan
   {:first-name    "ryan",
    :last-name     "zwiefelhofer",
-   :email         "ryan.zwiefelhofer@gmail.com",
+   :email         "ryan.z@gmail.com",
    :color         :blue,
-   :date-of-birth #inst "1992-11-23T07:00:00.000-00:00"})
+   :date-of-birth #inst "1992-01-23T07:00:00.000-00:00"})
 (def alyssa
   {:first-name    "alyssa",
    :last-name     "zwiefelhofer",
-   :email         "agzwiefelhofer@gmail.com",
+   :email         "agz@gmail.com",
    :color         :green,
-   :date-of-birth  #inst"1993-07-19T07:00:00.000-00:00"})
+   :date-of-birth  #inst"1993-08-18T07:00:00.000-00:00"})
 (def bryan
   {:first-name    "bryan",
    :last-name     "clonezwiefs",
-   :email         "ryan.zwiefelhofer@gmail.com",
+   :email         "ryan.z@gmail.com",
    :color         :blue,
-   :date-of-birth #inst "1992-11-23T07:00:00.000-00:00"})
+   :date-of-birth #inst "1992-01-23T07:00:00.000-00:00"})
 
 (defn db-test-fixture [f] (reset! db []) (f))
 (use-fixtures :each db-test-fixture)

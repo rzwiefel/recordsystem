@@ -76,19 +76,19 @@
   (are [parse-fn data expected]
        (let [parsed (parse-fn data)] (= (first parsed) expected))
        parse-pipe
-       "z |  | rz@gmail.com | blue | 11/23/1992"
+       "z |  | rz@gmail.com | blue | 1/23/1992"
        {:last-name     "z",
         :first-name    nil,
         :email         "rz@gmail.com",
         :color         :blue,
-        :date-of-birth #inst "1992-11-23T07:00:00.000-00:00"}
+        :date-of-birth #inst "1992-01-23T07:00:00.000-00:00"}
        parse-pipe
-       "z | r | rz@gmail.com | | 11/23/1992"
+       "z | r | rz@gmail.com | | 1/23/1992"
        {:last-name     "z",
         :first-name    "r",
         :email         "rz@gmail.com",
         :color         nil,
-        :date-of-birth #inst "1992-11-23T07:00:00.000-00:00"}
+        :date-of-birth #inst "1992-01-23T07:00:00.000-00:00"}
        parse-pipe
        "z | r | rz@gmail.com | orange | "
        {:last-name     "z",
@@ -103,7 +103,7 @@
        (let [parsed (parse-fn data)] (= num-valid (count parsed)))
        parse-pipe
        0
-       "doe | john jd@email.com | blue | 11/23/1992"
+       "doe | john jd@email.com | blue | 1/23/1992"
 
        parse-pipe
        0
@@ -116,8 +116,8 @@
 (deftest parsing-works
   (let
     [pipe-data
-       "Zwiefelhofer | ryan | ryan.zwie@gmail.com | blue | 11/23/1992
-Badahdah | chris | a.badahdah@gmail.com | red | 04/15/1992
+       "Zwiefelhofer | ryan | ryan.zwie@gmail.com | blue | 1/23/1992
+Badahdah | chris | a.badh@gmail.com | red | 04/15/1992
 Hickey | rich | rich.hickey@cognitect.com | green | 07/27/1967"
      parsed    (parse-pipe pipe-data)]
     (is (= 3 (count parsed)))
@@ -125,8 +125,8 @@ Hickey | rich | rich.hickey@cognitect.com | green | 07/27/1967"
     (is (= #{"ryan" "chris" "rich"} (set (map :first-name parsed)))))
   (let
     [comma-data
-       "Zwiefelhofer, ryan, ryan.zwie@gmail.com, blue, 11/23/1992
-Badahdah, chris, a.badahdah@gmail.com, red, 04/15/1992
+       "Zwiefelhofer, ryan, ryan.zwie@gmail.com, blue, 1/23/1992
+Badahdah, chris, a.bad@gmail.com, red, 04/15/1992
 Hickey, rich, rich.hickey@cognitect.com, green, 07/27/1967"
      parsed     (parse-comma comma-data)]
     (is (= 3 (count parsed)))
@@ -134,8 +134,8 @@ Hickey, rich, rich.hickey@cognitect.com, green, 07/27/1967"
     (is (= #{"ryan" "chris" "rich"} (set (map :first-name parsed)))))
   (let
     [space-data
-       "Zwiefelhofer ryan ryan.zwie@gmail.com blue 11/23/1992
-Badahdah chris a.badahdah@gmail.com red 04/15/1992
+       "Zwiefelhofer ryan ryan.zwie@gmail.com blue 1/23/1992
+Badahdah chris a.bah@gmail.com red 04/15/1992
 Hickey rich rich.hickey@cognitect.com green 07/27/1967"
      parsed     (parse-space space-data)]
     (is (= 3 (count parsed)))
