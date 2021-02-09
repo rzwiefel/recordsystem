@@ -8,7 +8,6 @@
 (defn parse-date [s] (.parse date-format s))
 
 
-
 (defn store!
   "Store an item.
   TODO(RCZ) - Do we want to allow a collection to be passed as well?"

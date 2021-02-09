@@ -9,11 +9,12 @@
 (defn- file-ext
   [path]
   (cond
-    (nil? path) nil
+    (nil? path)                  nil
     (str/ends-with? path ".csv") :csv
     (str/ends-with? path ".ssv") :ssv
     (str/ends-with? path ".psv") :psv
-    :else (throw (IllegalArgumentException. "No match for that extension"))))
+    :else                        (throw (IllegalArgumentException.
+                                          "No match for that extension"))))
 
 (defn- get-file
   [^String path]
@@ -24,7 +25,7 @@
        :path path,
        :file f}
       (catch Exception
-             e
+        e
         {:path      path,
          :exception (.getMessage e)}))))
 
@@ -35,13 +36,15 @@
                                   (map get-file file-paths))]
     [data errs]))
 
-(defn- parse [item]
+(defn- parse
+  [item]
   (condp = (:type item)
     :csv (parse/parse-comma (:data item))
     :ssv (parse/parse-space (:data item))
     :psv (parse/parse-pipe (:data item))))
 
-(defn- convert-dates [data]
+(defn- convert-dates
+  [data]
   (for [item data]
     (apply
       hash-map
@@ -60,10 +63,10 @@
   (let [[input-files errors] (resolve-files input)]
     (if (seq errors)
       (println "Errors:" errors)
-      (let [data (flatten (map parse input-files))
-            _ (doseq [item data] (data/store! item))
+      (let [data   (flatten (map parse input-files))
+            _      (doseq [item data] (data/store! item))
             sorted (data/query :sorts output)
-            xform (if disable-date-format identity convert-dates)]
+            xform  (if disable-date-format identity convert-dates)]
         (pprint (xform sorted))
         (xform sorted)))))
 
