@@ -16,6 +16,14 @@ bonus option:
 Endpoints:
 - `POST /records` (Content-Type: text/<csv/psv/ssv>)
 - `GET /records/:attribute`
+  - attributes:
+    ```clojure
+    {"email"     :email,
+     "birthdate" :date-of-birth,
+     "name"      :last-name,
+     "color"     :color,
+     "firstname" :first-name}
+    ```
   - Optional Query Param: `dir=<asc/desc>`
 - CURLs listed at bottom of page
 
