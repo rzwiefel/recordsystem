@@ -2,6 +2,7 @@
   (:require [recordsystem.parse :as parse]
             [recordsystem.data :as data]
             [clojure.string :as str]
+            [clojure.pprint :refer [pprint]]
             [clojure.test :refer [deftest is]])
   (:import (java.io File)))
 
@@ -23,7 +24,7 @@
        :path path,
        :file f}
       (catch Exception
-        e
+             e
         {:path      path,
          :exception (.getMessage e)}))))
 
@@ -40,20 +41,32 @@
     :ssv (parse/parse-space (:data item))
     :psv (parse/parse-pipe (:data item))))
 
+(defn- convert-dates [data]
+  (for [item data]
+    (apply
+      hash-map
+      (flatten (for [[k v] item]
+                 (if (instance? java.util.Date v)
+                   [k (.format data/date-format v)]
+                   [k v]))))))
+
 (defn -help
   [& args]
   (println "USAGE:")
   (println "  clojure -X:cli :input '[\"FILE1\" \"FILE2\" ..]'"))
 
 (defn -main
-  [{:keys [input output], :or {}, :as all}]
-  (println "Args:" all)
+  [{:keys [input output disable-date-format], :or {}, :as all}]
   (let [[input-files errors] (resolve-files input)]
     (if (seq errors)
       (println "Errors:" errors)
-      (let [data (flatten (map parse input-files))]
-        (doseq [item data] (data/store! item))
-        (println (data/query))))))
+      (let [data (flatten (map parse input-files))
+            _ (doseq [item data] (data/store! item))
+            sorted (data/query :sorts output)
+            xform (if disable-date-format identity convert-dates)]
+        (pprint (xform sorted))
+        (xform sorted)))))
+
 
 (deftest parsing-extension-works
   (is (= :csv (file-ext "abcdefg.csv")))
