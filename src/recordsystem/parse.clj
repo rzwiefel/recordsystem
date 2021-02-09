@@ -19,10 +19,10 @@
       (func arg))))
 
 (def record-types
-  {:first-name    (blank-or str),
-   :last-name     (blank-or str),
-   :email         (blank-or str),
-   :color         (blank-or keyword),
+  {:first-name    (blank-or (comp str/lower-case str)),
+   :last-name     (blank-or (comp str/lower-case str)),
+   :email         (blank-or (comp str/lower-case str)),
+   :color         (blank-or (comp keyword str/lower-case)),
    :date-of-birth (blank-or parse-date)})
 
 (defn- convert-types
@@ -49,9 +49,6 @@
   (parse-infix #"," [:last-name :first-name :email :color :date-of-birth]))
 (def parse-space
   (parse-infix #"\s" [:last-name :first-name :email :color :date-of-birth]))
-
-; TODO (RCZ) - Will we need to automatically choose parser or will it be
-; explicit?
 
 
 (deftest missing-fields-behvior
@@ -91,9 +88,9 @@
        0
        "!@$(&%!@*#&!@*&!@%*(#(\naaaaaaaaaaaaaaa"
 
-         parse-pipe
+       parse-pipe
        1
-         "!@#$%^&*()-=\na|a|a@a.a|red|1/1/2000"))
+       "!@#$%^&*()-=\na|a|a@a.a|red|1/1/2000"))
 
 (deftest parsing-works
   (let
