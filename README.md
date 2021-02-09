@@ -7,7 +7,6 @@
 
 - `clojure -X:cli :input '["/Users/ryanzwiefelhofer/Downloads/data.ssv" "/Users/ryanzwiefelhofer/Downloads/data.psv" "/Users/ryanzwiefelhofer/Downloads/data.csv"]' :output '[:email :desc :last-name :asc :first-name :desc]'`
 
-
 bonus option:
 `:disable-date-format true`
 
@@ -19,6 +18,9 @@ Endpoints:
 - `GET /records/:attribute`
   - Optional Query Param: `dir=<asc/desc>`
 - CURLs listed at bottom of page
+
+### Running Tests
+` clojure -X:test`
 
 ### Assumptions
 

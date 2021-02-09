@@ -3,7 +3,7 @@
             [recordsystem.data :as data]
             [clojure.string :as str]
             [clojure.pprint :refer [pprint]]
-            [clojure.test :refer [deftest is]])
+            [clojure.test :refer [deftest is run-all-tests]])
   (:import (java.io File)))
 
 (defn- file-ext
@@ -79,4 +79,7 @@
       (is (= data (:data res)))
       (is (= :psv (:type res))))
     (.delete temp)))
+
+(defn run-tests [arg]
+  (run-all-tests #"^recordsystem.*"))
 

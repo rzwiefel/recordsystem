@@ -12,4 +12,6 @@
            :help {:exec-fn   recordsystem.cli/-help
                   :exec-args {}}
            :rest {:exec-fn   recordsystem.rest/-main
+                  :exec-args {}}
+           :test {:exec-fn recordsystem.cli/run-tests
                   :exec-args {}}}}
