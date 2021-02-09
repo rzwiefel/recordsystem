@@ -15,7 +15,8 @@
 (defn parse-date [s] (.parse date-format s))
 
 (defn convert-dates
-  "If data is a sequence"
+  "If data is a collection (but not a map), and contains maps
+  then transform all dates to `date-format"
   [data]
   (if (and (coll? data) (not (map? data)) (map? (first data)))
     (for [item data]
@@ -29,6 +30,7 @@
 
 
 (defn blank-or
+  "Provides nil-punning for nil and empty string, or calls func"
   [func]
   (fn [^String arg]
     (if (or (nil? arg) (= "" arg))
@@ -48,6 +50,8 @@
 
 ; TODO (RCZ) - Failure case? Return failure?
 (defn- parse-infix
+  "Returns a function that parses a string delimited by `delimiter` and
+  reads data according to `order` listed"
   [^Pattern delimiter order]
   (fn [data]
     (let [lines       (str/split-lines data)

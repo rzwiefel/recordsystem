@@ -2,19 +2,17 @@
   (:require [clojure.test :refer [deftest is are use-fixtures]]))
 
 (def db (atom []))
-(def failed-parsing (atom []))
-
-
-
 
 (defn store!
-  "Store an item.
-  TODO(RCZ) - Do we want to allow a collection to be passed as well?"
+  "Store an item"
   [person]
   #_(println "data/store! receiving: " person)
   (swap! db #(conj % person)))
 
-(defn store-failed-parsing! [item] (swap! failed-parsing #(conj % item)))
+(defn remove-all!
+  []
+  (reset! db []))
+
 
 (defn- filter-db
   [queries data]
@@ -87,7 +85,6 @@
 (deftest sorting
   (println "test2")
   (reset! db [addy ryan alyssa bryan])
-  #_(map store! [addy ryan alyssa bryan])
   (is (= (map :first-name [bryan ryan alyssa addy])
          (map :first-name (query :sorts [:email :desc :last-name :asc]))))
   (is (= (map :first-name [addy alyssa bryan ryan])
